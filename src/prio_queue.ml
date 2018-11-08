@@ -28,7 +28,7 @@ module PrioQueue : PrioQueueType =
         | [] -> [(p, v)]
         | (p1, v1) :: q1 ->
             if compare p p1 < 0 (* p < p1 ? *)
-            then (p, v) :: q1
+            then (p, v) :: (p1, v1) :: q1
             else (p1, v1) :: ins q1
       in
       ins q

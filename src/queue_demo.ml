@@ -8,42 +8,44 @@ module type QueueType =
     exception Empty
   end
 
-
 module Queue : QueueType =
   struct
-    type 'a queue = 'a list
-    exception Empty
-        
-    let empty = []
+    type 'a queue = 'a list * 'a list
 
-    let is_empty q =
-      q = empty
+    exception Empty 
 
-    let enqueue x q =
-      List.append q [x]
-        
-    let dequeue = function
-      | [] -> raise Empty
-      | x :: q -> x, q
+    let empty = [], []
+
+    let is_empty q = 
+      q = empty 
+      
+    let enqueue x q = 
+      match q with
+      | enq, deq -> x :: enq, deq
+
+    let rec dequeue = function
+      | [], [] -> raise Empty
+      | enq, x :: deq -> x, (enq, deq)
+      | enq, [] -> dequeue ([], List.rev enq)
+
   end
 
 let q = Queue.empty
 
-let flip f x y = f y x
-    
-let q1 =
-  List.fold_left
-    (flip Queue.enqueue)
-    Queue.empty
-    [1; 2; 3; 4]
+let q1 = Queue.enqueue 1 q
 
-let v, _ = Queue.(empty |> enqueue 1 |> enqueue 2 |> dequeue)
+let q2 = Queue.enqueue 2 q1
 
-let _ = Printf.printf "%d\n" v
+let v1, q3 = Queue.dequeue q2
 
-let zero =
-  let module M = struct
-    let i = 0
-  end
-  in
-  M.i
+let v2, q4 = Queue.dequeue q3
+
+let q = Queue.(empty |> enqueue 1 |> enqueue 2)
+
+
+(*let xs = 3 :: q*)
+
+let _ = Printf.printf "%d %d\n" v1 v2
+
+
+let q = MyQueue.empty

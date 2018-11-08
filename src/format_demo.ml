@@ -6,9 +6,15 @@ type term =
   | Const of int
   | BinOp of bop * term * term
 
+let pr_bop ppf = function
+  | Mult -> Format.fprintf ppf "%s" "*"
+  | Plus -> Format.fprintf ppf "%s" "+"
 
-let pr_term (pp: Format.formatter) (t: term) : unit =
-  ()
+let rec pr_term (ppf: Format.formatter) (t: term) : unit =
+  match t with
+  | Const i -> Format.fprintf ppf "%d" i
+  | BinOp (bop, t1, t2) ->
+    Format.fprintf ppf "@[<2>(%a@ %a@ %a)@]" pr_term t1 pr_bop bop pr_term t2
 
 (** Convert the term [t] to its string representation *)
 let string_of_term (t: term) : string =

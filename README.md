@@ -320,7 +320,7 @@ that this type is implemented as `'a list`. For example, the following
 client code for printing a queue will not compile because it relies on
 the fact that `'a Queue.queue` is implemented as a list:
 
-```
+```ocaml
 let print_int_queue (q: int Queue.queue) =
   let rec pr = function
   | match q with
@@ -334,7 +334,7 @@ let print_int_queue (q: int Queue.queue) =
 Instead, this code would have to written by in terms of the members of
 `QueueType` for manipulating the queue values:
 
-```
+```ocaml
 let print_int_queue (q: int Queue.queue) =
   let rec pr = function
     if Queue.is_empty q then () else
@@ -634,7 +634,7 @@ module PrioQueue : PrioQueueType =
         | [] -> [(p, v)]
         | (p1, v1) :: q1 ->
             if compare p p1 < 0 (* p < p1 ? *)
-            then (p, v) :: q1
+            then (p, v) :: q
             else (p1, v1) :: ins q1
       in
       ins q
@@ -791,7 +791,7 @@ module MakePrioQueue (O: OrderedType) : PrioQueueType =
         | [] -> [(p, v)]
         | (p1, v1) :: q1 ->
             if compare p p1 < 0 (* p < p1 ? *)
-            then (p, v) :: q1
+            then (p, v) :: q
             else (p1, v1) :: ins q1
       in
       ins q
